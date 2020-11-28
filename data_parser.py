@@ -5,7 +5,7 @@ import csv
 
 TIME_MAP_THRESHOLD = timedelta(minutes=10)
 MEAL_THRESHOLD = 1.0
-FIX_CGM_WHILE_MAPPING = 1
+FIX_CGM_WHILE_MAPPING = 0
 
 
 def parse_mat_data():
@@ -15,15 +15,16 @@ def parse_mat_data():
     cgm_data = list(zip(mat_data['numCGM'][0], convert_date_str_to_date_obj(mat_data['dateNumberStr'])))
     insulin_data = list(zip(mat_data['actBolusDelivered'][0], convert_date_str_to_date_obj(mat_data['dateMuBolusStr'])))
 
-    mapped_cgm_insulin_data = get_data_mapped_by_time(cgm_data, insulin_data)
-    mapped_cgm_meal = insulin_to_meal(mapped_cgm_insulin_data)
 
-    print("Total number of mapped points: {}".format(mapped_cgm_insulin_data.__len__()))
-    with open('data/cgm_to_meal.csv', 'w', newline='', encoding='utf-8') as out:
-        csv_out = csv.writer(out)
-        csv_out.writerow(['cgm', 'meal'])
-        for row in mapped_cgm_meal:
-            csv_out.writerow(row)
+    mapped_cgm_insulin_data = get_data_mapped_by_time(cgm_data, insulin_data)
+    # mapped_cgm_meal = insulin_to_meal(mapped_cgm_insulin_data)
+    #
+    # print("Total number of mapped points: {}".format(mapped_cgm_insulin_data.__len__()))
+    # with open('data/cgm_to_meal.csv', 'w', newline='', encoding='utf-8') as out:
+    #     csv_out = csv.writer(out)
+    #     csv_out.writerow(['cgm', 'meal'])
+    #     for row in mapped_cgm_meal:
+    #         csv_out.writerow(row)
 
 
 def convert_date_str_to_date_obj(date_str_list):
@@ -43,7 +44,7 @@ def get_data_mapped_by_time(cgm_data, insulin_data):
         min_time_delta = timedelta(days=365)
         mapped_val2 = None
         for val2, val2_time in list2:
-            time_delta = abs(val2_time - val1_time)
+            time_delta = abs(val1_time - val2_time)
             if time_delta < min_time_delta:
                 mapped_val2 = val2
                 min_time_delta = time_delta
