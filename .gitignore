@@ -10,3 +10,7 @@
 /.idea/vcs.xml
 /lib/pykalman-master/
 /python37_venv/
+/kalman_filter_barebones.ipynb
+/.ipynb_checkpoints/kalman_filter_barebones-checkpoint.ipynb
+/sarima_model_barebones.ipynb
+/.ipynb_checkpoints/sarima_model_barebones-checkpoint.ipynb

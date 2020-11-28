@@ -9,10 +9,11 @@ from scipy.linalg import sqrtm
 
 # constants not part of the state
 # todo set as per our data, this is sampling time
-h = 2
 
 
 def transition_function(state, noise):
+    # constant variables
+    h = 2
     # assuming that the noise is not automatically added by kalman filter library
     # todo check if above is correct
     # state variables
@@ -88,7 +89,10 @@ def observation_function(state, noise):
     return np.array([G_s + noise])
 
 
-def fx(state, dt):
+def f_x(state, dt):
+    # constant variables
+    h = 2
+
     # assuming that the noise is not automatically added by kalman filter library
     # todo check if above is correct
     # state variables
@@ -156,7 +160,7 @@ def fx(state, dt):
     return next_state
 
 
-def hx(state):
+def y_x(state):
     # the observation function takes the state and returns the CGM value only because that's what we
     # actually measure
     G_s = state[1]
@@ -202,7 +206,7 @@ def filterpy_approach():
 
     dt = 0.1
     points = MerweScaledSigmaPoints(8, alpha=1, beta=2, kappa=0)
-    kf = UnscentedKalmanFilter(dim_x=8, dim_z=1, dt=dt, fx=fx, hx=hx, points=points)
+    kf = UnscentedKalmanFilter(dim_x=8, dim_z=1, dt=dt, fx=f_x, hx=y_x, points=points)
     kf.x = np.array([0, cgm[0], 0, 0, 0.068, 0.037, 1.3, 20])
     kf.R = np.array([100])
     kf.Q = np.diag([1e-06, 1e-06, 1e-03, 1e-03, 1e-02, 1e-01, 1e-02, 1e-01])
@@ -211,7 +215,6 @@ def filterpy_approach():
         kf.predict()
         kf.update(z)
         print(kf.x[2])
-
 
 
 if __name__ == "__main__":
