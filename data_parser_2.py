@@ -5,7 +5,7 @@ import pandas as pd
 
 
 TIME_MAP_THRESHOLD = timedelta(minutes=10)
-TIME_CGM_THRESHOLD = timedelta(hours=2)
+TIME_CGM_THRESHOLD = timedelta(minutes=30)
 MEAL_THRESHOLD = 1.0
 FIX_CGM_WHILE_MAPPING = 0
 
@@ -20,6 +20,7 @@ def parse_mat_data():
     with open('data/cgm_to_meal_start.csv', 'w', newline='', encoding='utf-8') as out:
         csv_out = csv.writer(out)
         csv_out.writerow(['cgm','time_insulin','time_cgm','meal_start','meal'])
+        # csv_out.writerow(['cgm', 'insulin', 'insulin_time', 'cgm_time'])
         for row in mapped_cgm_meal:
             csv_out.writerow(row)
 
