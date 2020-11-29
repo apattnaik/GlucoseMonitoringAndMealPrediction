@@ -86,6 +86,19 @@ def insulin_to_meal():
     return mapped_label
 
 
+def insulin_correction(data):
+    meal_indices = data.index[data['meal_start'] == 1]
+    for idx in meal_indices:
+        meal_time = data.loc[idx]['time_insulin']
+        time_diff = pd.Timedelta(timedelta())
+        prev_idx = idx - 1
+        while True:
+            prev_point_time = data.loc[prev_idx]['time_insulin']
+            time_diff = abs(meal_time - prev_point_time)
+            if time_diff > pd.Timedelta(timedelta(seconds=10)):
+                break
+            data.iat[prev_idx, 4] = 1
+            prev_idx -= 1
 
 
 if __name__ == "__main__":
